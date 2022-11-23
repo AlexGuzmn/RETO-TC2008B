@@ -1,6 +1,5 @@
 import agentpy as ap
 import numpy as np
-import math
 import random
 import json
 
@@ -147,6 +146,17 @@ class Model(ap.Model):
                                           self.p.size - (i * self.p.car_gap)
                                           ]
                                     )
+        ## Step Counter
+        self.step = 0
+        
+        ## Archivo json
+        self.data = {}
+        self.data['size'] =[]
+        self.data['size'].append({'size': self.p.size})
+        self.data['cars'] = []
+        self.data['traffic_lights'] = []
+        self.data['steps'] = []
+
         self.cars.put_traffic_lights()
         self.cars.put_car_ahead()
 
@@ -155,6 +165,7 @@ class Model(ap.Model):
         self.traffic_lights.update_state(traffic_lights_cycle_t)
         self.cars.update_velocity()
         self.cars.update_position()
+        ## actualizar datos
 
     def end(self):
         json_file = json.dumps(self.data)
