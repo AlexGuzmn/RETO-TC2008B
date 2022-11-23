@@ -3,7 +3,6 @@ import numpy as np
 import random
 import json
 
-
 class Car(ap.Agent):
     def setup(self):
         self.direction = np.array([0, 0])  # x | y
@@ -79,6 +78,12 @@ class Car(ap.Agent):
         if self.velocity < 0:
             self.velocity = 0
 
+    def save_to_json(self):
+        self.position = self.model.avenue.positions[self]
+        data = self.model.data
+        id = "c_" + str(self.id)
+        data["steps"][self.model.t]["cars"].append({id: { "position": [self.position[0], self.position[1]]} })
+
 class Traffic_Light(ap.Agent):
     def setup(self):
         self.direction = np.array([0, 0])  # x | y
@@ -95,8 +100,18 @@ class Traffic_Light(ap.Agent):
         else:
             self.state = 2
 
+    def save_to_json(self):
+        data = self.model.data
+        id = "tl_" + str(self.id)
+        data["steps"][self.model.t]["traffic_lights"].append({id: { "state": self.state} })
+    
+
 class Model(ap.Model):
     def setup(self):
+        ## Archivo json
+        self.data = {}
+        self.data["steps"] = []
+
         # Init Space
         self.avenue = ap.Space(self, shape=(self.p.size, self.p.size), torus=True)
 
@@ -146,37 +161,40 @@ class Model(ap.Model):
                                           self.p.size - (i * self.p.car_gap)
                                           ]
                                     )
-        ## Step Counter
-        self.step = 0
-        
-        ## Archivo json
-        self.data = {}
-        self.data['size'] =[]
-        self.data['size'].append({'size': self.p.size})
-        self.data['cars'] = []
-        self.data['traffic_lights'] = []
-        self.data['steps'] = []
-
         self.cars.put_traffic_lights()
         self.cars.put_car_ahead()
+
+        self.save_to_json()
+
 
     def step(self):
         traffic_lights_cycle_t = self.t % self.traffic_lights_max_cycle
         self.traffic_lights.update_state(traffic_lights_cycle_t)
         self.cars.update_velocity()
         self.cars.update_position()
-        ## actualizar datos
+
+        self.save_to_json()
 
     def end(self):
-        json_file = json.dumps(self.data)
-        with open('simul_data.json', 'w') as outfile:
+        print("endl")
+        json_file = json.dumps(self.data, indent = 2)
+        with open('data.json', 'w') as outfile:
             outfile.write(json_file)
 
+    def save_to_json(self):
+        self.data["steps"].append({})
+        
+        self.data["steps"][self.model.t]["cars"] = []
+        self.cars.save_to_json()
+
+        self.data["steps"][self.model.t]["traffic_lights"] = []
+        self.traffic_lights.save_to_json()
+    
 parameters = {
     "size": 1000,
     "seed": 123,
-    "steps": 400,
-    "population": 20,
+    "steps": 40,
+    "population": 2,
     "green_duration": 20,
     "yellow_duration": 10,
     "red_duration": 60,
@@ -186,6 +204,9 @@ parameters = {
     "road_lines": 1,
 }
 
-model = Model(parameters)
-results = model.run()
-print(results.reporters)
+def main():
+    model = Model(parameters)
+    model.run()
+
+if __name__ == "__main__":
+    main()
