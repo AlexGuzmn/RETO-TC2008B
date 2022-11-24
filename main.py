@@ -72,6 +72,9 @@ class Car(ap.Agent):
                 if distance < self.p.traffic_lights_y_offset * 3.2 and traffic_light.state == 2 and traffic_light_is_behind and distance > self.p.traffic_lights_y_offset * 1.8:
                     if self.velocity > 0:
                         self.velocity -= 1
+                elif distance < self.p.traffic_lights_y_offset * 3.2 and traffic_light.state == 1 and traffic_light_is_behind and distance > self.p.traffic_lights_y_offset * 1.8:
+                    if self.velocity > 0:
+                        self.velocity -= 0.5
                 else:
                     if self.velocity < self.max_velocity:
                         self.velocity += 0.5
