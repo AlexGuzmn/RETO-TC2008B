@@ -9,8 +9,7 @@ class Car(ap.Agent):
         self.velocity = 0.0  # float
         self.max_velocity = 10.0
         self.my_traffic_lights = []
-        self.has_car_ahead = False
-        
+        self.has_car_ahead = False 
 
     def put_traffic_lights(self):
         for traffic_light in self.model.traffic_lights:
@@ -85,7 +84,7 @@ class Car(ap.Agent):
         self.position = self.model.avenue.positions[self]
         data = self.model.data
         id = "c_" + str(self.id)
-        data["steps"][self.model.t]["cars"].append({id: { "position": [self.position[0], self.position[1]]} })
+        data["steps"][self.model.t]["cars"].append({ "position": [self.position[0], self.position[1]]})
 
 class Traffic_Light(ap.Agent):
     def setup(self):
@@ -106,7 +105,7 @@ class Traffic_Light(ap.Agent):
     def save_to_json(self):
         data = self.model.data
         id = "tl_" + str(self.id)
-        data["steps"][self.model.t]["traffic_lights"].append({id: { "state": self.state} })
+        data["steps"][self.model.t]["traffic_lights"].append({ "state": self.state})
     
 
 class Model(ap.Model):
