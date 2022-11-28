@@ -1,8 +1,9 @@
 # RETO-TC2008B
 
-## This code makes a multiagent simmulation using:
+## Este código tiene una simulación multiagente usando:
 
  - Python <img src="https://cdn3.iconfinder.com/data/icons/logos-and-brands-adobe/512/267_Python-512.png" alt="drawing" width="20"/> 
-- Unity <img src="https://cdn4.iconfinder.com/data/icons/various-icons-2/476/Unity.png" alt="drawing" width="30"/>
+  - AgentPy
+  - Jupyter Notebook
 
-The implemenatation is simulatin a studi case to help reduce the traffic in Guadalajara.
+Esta implmenteación busca simular el tráfico para mejorar sus flujos en la Zona Metropolitanda de Guadalajara.
